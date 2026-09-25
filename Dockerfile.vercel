@@ -1,0 +1,16 @@
+# Vercel PHP container for KOZI Coffee
+FROM dunglas/frankenphp:php8.4-alpine
+
+WORKDIR /app
+
+# Install the PHP extensions needed by the KOZI PHP/MySQL app.
+RUN install-php-extensions pdo_mysql
+
+# Copy the entire PHP project into the web root.
+COPY . /app
+
+# FrankenPHP serves the app over HTTP.
+# Vercel supplies $PORT at runtime; default to 80 if it is not set.
+ENV SERVER_NAME=":80"
+
+CMD ["sh", "-c", "frankenphp php-server --root /app --listen :${PORT:-80}"]
